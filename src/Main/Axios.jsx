@@ -6,8 +6,11 @@ const api = axios.create({
 });
 api.interceptors.response.use(null, (e) => {
   if (e.status === 401) {
-    const state = useMyStor.getState();
-    state.logout();
+   import("./Store/Mystore").then((res)=>{
+    const useAuthStore = res.default
+    const state =useAuthStore.getState()
+    state.logaute()
+   })
   }
 });
 export default api;

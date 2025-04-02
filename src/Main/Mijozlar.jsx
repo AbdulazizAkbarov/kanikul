@@ -8,16 +8,13 @@ import api from "./Axios";
 function Mijozlar() {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
-  
 
   const accessToken = useMyStor((state) => state.accessToken);
 
   const Users = () => {
     api
       .get("/api/users?limit=10&page=1&order=ASC", {
-        headers:{
-          Authorization:`Bearer ${accessToken}`
-        }
+      
       })
       .then((res) => {
         setUsers(res.data.items);
@@ -30,6 +27,13 @@ function Mijozlar() {
   useEffect(() => {
     Users();
   }, [accessToken]);
+
+  function Delet(id) {
+    api.delete(`/api/users/${id}`).then((res) => {
+      console.log(res.data);
+      setUsers((i) => i.filter((item) => item.id !== id));
+    });
+  }
 
   return (
     <div className="w-[1300px]">
@@ -70,15 +74,23 @@ function Mijozlar() {
 
           {
             title: "Delet & Edit",
-            dataIndex: "Delet / Edit",
-            render:()=>{
-              return <div className=" flex gap-2">
-                <Button type="primary" style={{background:"red"}}>Delet</Button>
-                <Button type="primary">Edit</Button>
-
-              </div>
-            }
-          },
+            dataIndex: "",
+            render: (_, record) => {
+              return (
+                <div className=" flex gap-2">
+                  <Button
+                    type="primary"
+                    style={{ background: "red" }}
+                    onClick={() => Delet(record.id)} // To‘g‘ri chaqirilishi kerak
+                  >
+                    Delet
+                  </Button>
+                  <Button type="primary">Edit</Button>
+                </div>
+              );
+            },
+          }
+          
         ]}
         dataSource={users}
       />

@@ -31,6 +31,14 @@ function Kategory() {
     Category();
   }, [accessToken]);
 
+  function Delet(id) {
+    api.delete(`/api/categories/${id}`).then((res) => {
+      console.log(res.data);
+      setmahsulot((i) => i.filter((item) => item.id !== id));
+    });
+  }
+
+
   return (
     <div className="w-[1300px]">
       <AddCategory setOpen={setOpen} open={open} onRefresh={Kategory} />
@@ -64,18 +72,22 @@ function Kategory() {
 
           {
             title: "Delet & Edit",
-            dataIndex: "Delet / Edit",
-            render: () => {
+            dataIndex: "",
+            render: (_, record) => {
               return (
                 <div className=" flex gap-2">
-                  <Button type="primary" style={{ background: "red" }}>
+                  <Button
+                    type="primary"
+                    style={{ background: "red" }}
+                    onClick={() => Delet(record.id)} // To‘g‘ri chaqirilishi kerak
+                  >
                     Delet
                   </Button>
                   <Button type="primary">Edit</Button>
                 </div>
               );
             },
-          },
+          }
         ]}
         dataSource={mahsulot}
       />
