@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import useMyStor from "./Store/Mystore";
 import { Button, Table } from "antd";
-import AddMahsulotlarPage from "../Main/AddMahsulotlar";
 import api from "./Axios";
 import AddCategory from "./AddKategory";
 
