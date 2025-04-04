@@ -1,19 +1,18 @@
-import { Button, Drawer, Form, Input, message, Radio } from "antd";
+import { Button, Drawer, Form, Input, message, Radio, Switch } from "antd";
 import axios from "axios";
 import { useForm } from "antd/es/form/Form";
 import api from "./Axios";
 
-function AddMijozlar({ setOpen, open, onRefresh }) {
+function AddBanner({ setOpen, open, onRefresh }) {
   const [form] = useForm();
 
   const handleSubmit = (values) => {
     api
-      .post("/api/users", {
-        name: values.name,
-        email: values.email,
-        password: values.password,
-        image: values.image,
-        role: values.role,
+      .post("/api/banners", {
+        title: values.title,
+        imageUrl: values.imageUrl,
+        isActive: values.isActive,
+        createdAt: values.createdAt,
       })
       .then((res) => {
         message.success("Foydalanuvchi qo‘shildi!");
@@ -38,31 +37,24 @@ function AddMijozlar({ setOpen, open, onRefresh }) {
       </Button>
 
       <Drawer open={open} onClose={() => setOpen(false)} destroyOnClose>
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
-          <Form.Item label="Ism" name="name">
+      <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+        >
+          <Form.Item label="Title" name="title">
             <Input />
           </Form.Item>
 
-          <Form.Item label="Email" name="email">
+          <Form.Item label="isActive" name="isActive">
+          <Switch />
+          </Form.Item>
+
+          <Form.Item label="Parol" name="createdAt">
             <Input />
           </Form.Item>
 
-          <Form.Item label="Parol" name="password">
-            <Input.Password />
-          </Form.Item>
-
-          <Form.Item name="role" label="Rol">
-            <Radio.Group
-              options={[
-                { label: "Mijoz", value: "customer" },
-                { label: "Admin", value: "admin" },
-              ]}
-              optionType="button"
-              buttonStyle="solid"
-            />
-          </Form.Item>
-
-          <Form.Item label="Rasm URL" name="image">
+          <Form.Item label="Rasm URL" name="imageUrl">
             <Input placeholder="Rasm URL kiriting" />
           </Form.Item>
 
@@ -77,4 +69,4 @@ function AddMijozlar({ setOpen, open, onRefresh }) {
   );
 }
 
-export default AddMijozlar;
+export default AddBanner;

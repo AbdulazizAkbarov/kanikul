@@ -1,14 +1,15 @@
-import { Button, Drawer, Form, Input, message, Radio } from "antd";
-import axios from "axios";
+import { Button, Drawer, Form, Input, Radio, message } from "antd";
 import { useForm } from "antd/es/form/Form";
+import Item from "antd/es/list/Item";
+import React from "react";
 import api from "./Axios";
 
-function AddMijozlar({ setOpen, open, onRefresh }) {
+function EditMijozlar({ setSelected, selected }) {
   const [form] = useForm();
 
   const handleSubmit = (values) => {
     api
-      .post("/api/users", {
+      .patch(`/api/users/${selected.id}`, {
         name: values.name,
         email: values.email,
         password: values.password,
@@ -18,27 +19,27 @@ function AddMijozlar({ setOpen, open, onRefresh }) {
       .then((res) => {
         message.success("Foydalanuvchi qo‘shildi!");
         form.resetFields();
-        setOpen(false);
-        onRefresh?.();
+      
       })
       .catch((e) => {
         console.error("Xatolik", e);
         message.error("Xatolik yuz berdi");
       });
   };
-
   return (
     <div>
-      <Button
-        className="ml-[1200px] my-4"
-        type="primary"
-        onClick={() => setOpen(true)}
+      <Drawer
+        open={selected ? true : false}
+        onClose={() => {
+          setSelected(undefined);
+        }}
       >
-        Qo‘shish
-      </Button>
-
-      <Drawer open={open} onClose={() => setOpen(false)} destroyOnClose>
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          initialValues={selected}
+        >
           <Form.Item label="Ism" name="name">
             <Input />
           </Form.Item>
@@ -77,4 +78,7 @@ function AddMijozlar({ setOpen, open, onRefresh }) {
   );
 }
 
-export default AddMijozlar;
+export default EditMijozlar;
+
+
+

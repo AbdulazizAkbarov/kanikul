@@ -8,6 +8,7 @@ import api from "./Axios";
 function MahsulotlarPage() {
   const [mahsulot, setmahsulot] = useState([]);
   const [open, setOpen] = useState(false);
+  const [category, setCategory] = useState([]);
 
   const accessToken = useMyStor((state) => state.accessToken);
 
@@ -28,7 +29,12 @@ function MahsulotlarPage() {
 
   useEffect(() => {
     Mahsulot();
-  }, [accessToken]);
+    api.get("api/categories?limit=10&page=1&order=ASC",
+)
+    .then((res) => {
+      setCategory(res.data.items);
+    });
+  }, []);
 
   function Delet(id) {
     api.delete(`/api/products/${id}`).then((res) => {
@@ -65,7 +71,7 @@ function MahsulotlarPage() {
             title: "Description",
             dataIndex: "description",
           },
-       
+
           {
             title: "Price",
             dataIndex: "price",
@@ -74,7 +80,7 @@ function MahsulotlarPage() {
             title: "Stock",
             dataIndex: "stock",
           },
-        
+
           {
             title: "Rasm",
             dataIndex: "imageUrl",
@@ -82,8 +88,17 @@ function MahsulotlarPage() {
               return <img className="h-8 w-10" src={image}></img>;
             },
           },
-      
-         
+          {
+            title: "Catigory",
+            dataIndex: "categoryId",
+            render: (categoryId) => {
+              const s = category.find((a) => {
+                return a.id === categoryId;
+              });
+              return s?.name;
+            },
+          },
+
           {
             title: "Delet & Edit",
             dataIndex: "",
@@ -101,7 +116,7 @@ function MahsulotlarPage() {
                 </div>
               );
             },
-          }
+          },
         ]}
         dataSource={mahsulot}
       />

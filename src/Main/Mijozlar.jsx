@@ -4,18 +4,17 @@ import useMyStor from "./Store/Mystore";
 import { Button, Table } from "antd";
 import AddMijozlar from "./AddMijozlar";
 import api from "./Axios";
+import EditMijozlar from "./EditMijozlar";
 
 function Mijozlar() {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
-
+  const [selected, setSelected] = useState();
   const accessToken = useMyStor((state) => state.accessToken);
 
   const Users = () => {
     api
-      .get("/api/users?limit=10&page=1&order=ASC", {
-      
-      })
+      .get("/api/users?limit=10&page=1&order=ASC", {})
       .then((res) => {
         setUsers(res.data.items);
       })
@@ -37,14 +36,15 @@ function Mijozlar() {
 
   return (
     <div className="w-[1300px]">
-      <AddMijozlar setOpen={setOpen} open={open} onRefresh={Mijozlar} />
-
+      <AddMijozlar setOpen={setOpen} open={open} onRefresh={Users} />
+      <EditMijozlar
+        setSelected={setSelected}
+        selected={selected}
+        onRefresh={Users}
+      />
       <Table
         bordered
         style={{ width: "100%" }}
-        npmstyle={{
-          width: "500px",
-        }}
         rowKey="id"
         columns={[
           {
@@ -68,29 +68,35 @@ function Mijozlar() {
             title: "Rasm",
             dataIndex: "image",
             render: (image) => {
-              return <img className="h-8 w-10" src={image}></img>;
+              return <img className="h-8 w-10" src={image} alt="user" />;
             },
           },
 
           {
             title: "Delet & Edit",
             dataIndex: "",
-            render: (_, record) => {
+            render: (_, item) => {
               return (
                 <div className=" flex gap-2">
                   <Button
                     type="primary"
+                    onClick={() => {
+                      setSelected(item);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    type="primary"
                     style={{ background: "red" }}
-                    onClick={() => Delet(record.id)} // To‘g‘ri chaqirilishi kerak
+                    onClick={() => Delet(item.id)}
                   >
                     Delet
                   </Button>
-                  <Button type="primary">Edit</Button>
                 </div>
               );
             },
-          }
-          
+          },
         ]}
         dataSource={users}
       />

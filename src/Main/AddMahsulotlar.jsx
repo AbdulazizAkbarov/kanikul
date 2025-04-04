@@ -1,41 +1,17 @@
-import { Button, Drawer, Form, Input, message, Radio } from "antd";
-import axios from "axios";
+import { Button, Drawer, Form, Input, message, Radio, Select } from "antd";
 import { useForm } from "antd/es/form/Form";
-import useMyStor from "./Store/Mystore";
 import api from "./Axios";
+import { useEffect, useState } from "react";
 
 function AddMahsulotlarPage({ setOpen, open, onRefresh }) {
-  const accessToken = useMyStor((state) => state.accessToken);
   const [form] = useForm();
+  const [catName, setCatName] = useState([]);
 
-  const handleSubmit = (values) => {
-    api
-      .post(
-        "api/products",
-        {
-          name: values.name,
-          description: values.description,
-          price: values.price,
-          imageUrl: values.imageUrl,
-          stock: values.stock,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
-      .then((res) => {
-        message.success("Mahsulot qo‘shildi!");
-        form.resetFields();
-        setOpen(false);
-        onRefresh?.();
-      })
-      .catch((e) => {
-        console.error("Xatolik", e);
-        message.error("Xatolik yuz berdi");
-      });
-  };
+  useEffect(() => {
+    api.get("/api/categories").then((res) => {
+      setCatName(res.data.items);
+    });
+  }, []);
 
   return (
     <div>
@@ -48,7 +24,31 @@ function AddMahsulotlarPage({ setOpen, open, onRefresh }) {
       </Button>
 
       <Drawer open={open} onClose={() => setOpen(false)} destroyOnClose>
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={(values) => {
+            api
+              .post("/api/products", {
+                name: values.name,
+                categoryId:values.categoryId,
+                description: values.description,
+                price: Number(values.price),
+                imageUrl: values.imageUrl,
+                stock: Number(values.stock),
+              })
+              .then((res) => {
+                message.success("Mahsulot qo‘shildi!");
+                form.resetFields();
+                setOpen(false);
+                onRefresh?.();
+              })
+              .catch((e) => {
+                console.error("Xatolik", e);
+                message.error("Xatolik yuz berdi");
+              });
+          }}
+        >
           <Form.Item label="Ism" name="name">
             <Input />
           </Form.Item>
@@ -61,11 +61,20 @@ function AddMahsulotlarPage({ setOpen, open, onRefresh }) {
             <Input />
           </Form.Item>
 
-          <Form.Item name="Stock" label="stock">
+          <Form.Item name="stock" label="Stock">
             <Input />
           </Form.Item>
-
-          <Form.Item label="Rasm URL" name="image">
+          <Form.Item label="Category Name" name={"categoryId"}>
+            <Select
+              options={catName.map((i) => {
+                return {
+                  value: i.id,
+                  label: i.name,
+                };
+              })}
+            />
+          </Form.Item>
+          <Form.Item label="Rasm URL" name="imageUrl">
             <Input placeholder="Rasm URL kiriting" />
           </Form.Item>
 

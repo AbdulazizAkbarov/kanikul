@@ -64,10 +64,10 @@ function Kategory() {
             dataIndex: "description",
           },
 
-          {
-            title: "Stock",
-            dataIndex: "createdAt",
-          },
+          // {
+          //   title: "CreatedAt",
+          //   dataIndex: "createdAt",
+          // },
 
           {
             title: "Delet & Edit",

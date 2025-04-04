@@ -50,9 +50,9 @@ function AddCategory({ setOpen, open, onRefresh }) {
             <Input />
           </Form.Item>
 
-          <Form.Item label="CreatedAt" name="createdAt">
-            <Input />
-          </Form.Item>
+          {/* <Form.Item label="CreatedAt" name="createdAt">
+            <Input type="date" />
+          </Form.Item> */}
 
           <Form.Item>
             <Button type="primary" htmlType="submit">
