@@ -1,18 +1,20 @@
-import { Button, Drawer, Form, Input, Radio, Switch, message } from "antd";
+import { Button, Drawer, Form, Input, InputNumber, Radio, message } from "antd";
 import { useForm } from "antd/es/form/Form";
+import Item from "antd/es/list/Item";
 import React from "react";
 import api from "./Axios";
 
-function EditBanner({ seteditBanner, editBanner }) {
+function EditMahsulot({ setEditMahsulot, editMahsulot }) {
   const [form] = useForm();
 
   const handleSubmit = (values) => {
     api
-      .patch(`/api/banners  /${editBanner.id}`, {
-        title: values.title,
+      .patch(`/api/products/${editMahsulot.id}`, {
+        name: values.name,
+        descrtiption: values.descrtiption,
+        price: values.price,
+        stock: values.stock,
         imageUrl: values.imageUrl,
-        isActive: values.isActive,
-        createdAt: values.createdAt,
       })
       .then((res) => {
         message.success("Foydalanuvchi qo‘shildi!");
@@ -26,27 +28,31 @@ function EditBanner({ seteditBanner, editBanner }) {
   return (
     <div>
       <Drawer
-        open={editBanner ? true : false}
+        open={editMahsulot ? true : false}
         onClose={() => {
-          seteditBanner(undefined);
+          setEditMahsulot(undefined);
         }}
       >
         <Form
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
-          initialValues={editBanner}
+          initialValues={editMahsulot}
         >
-          <Form.Item label="Title" name="title">
+          <Form.Item label="Ism" name="name">
             <Input />
           </Form.Item>
 
-          <Form.Item label="isActive" name="isActive">
-          <Switch />
+          <Form.Item label="Descrtiption" name="descrtiption">
+            <Input />
           </Form.Item>
 
-          <Form.Item label="Parol" name="createdAt">
+          <Form.Item label="Price" name="price">
             <Input.Password />
+          </Form.Item>
+
+          <Form.Item name="stock" label="Stock">
+            <InputNumber />
           </Form.Item>
 
           <Form.Item label="Rasm URL" name="imageUrl">
@@ -64,4 +70,4 @@ function EditBanner({ seteditBanner, editBanner }) {
   );
 }
 
-export default EditBanner;
+export default EditMahsulot;

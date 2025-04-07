@@ -4,9 +4,11 @@ import useMyStor from "./Store/Mystore";
 import { Button, Table } from "antd";
 import AddMahsulotlarPage from "../Main/AddMahsulotlar";
 import api from "./Axios";
+import EditMahsulot from "./EditMahsulot";
 
 function MahsulotlarPage() {
   const [mahsulot, setmahsulot] = useState([]);
+  const[editMahsulot,setEditMahsulot]=useState()
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState([]);
 
@@ -49,7 +51,11 @@ function MahsulotlarPage() {
         open={open}
         onRefresh={MahsulotlarPage}
       />
-
+       <EditMahsulot
+        setEditMahsulot={setEditMahsulot}
+        editMahsulot={editMahsulot}
+        onRefresh={mahsulot}
+      />
       <Table
         bordered
         style={{ width: "100%" }}
@@ -108,11 +114,13 @@ function MahsulotlarPage() {
                   <Button
                     type="primary"
                     style={{ background: "red" }}
-                    onClick={() => Delet(record.id)} // To‘g‘ri chaqirilishi kerak
+                    onClick={() => Delet(record.id)} 
                   >
                     Delet
                   </Button>
-                  <Button type="primary">Edit</Button>
+                  <Button type="primary" onClick={()=>{
+                    setEditMahsulot(record)
+                  }}>Edit</Button>
                 </div>
               );
             },

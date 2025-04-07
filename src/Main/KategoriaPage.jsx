@@ -4,10 +4,12 @@ import useMyStor from "./Store/Mystore";
 import { Button, Table } from "antd";
 import api from "./Axios";
 import AddCategory from "./AddKategory";
+import EditCategory from "./EditKagtigory";
 
 function Kategory() {
   const [mahsulot, setmahsulot] = useState([]);
   const [open, setOpen] = useState(false);
+  const [editcategory, setEditCategory] = useState();
 
   const accessToken = useMyStor((state) => state.accessToken);
 
@@ -37,10 +39,14 @@ function Kategory() {
     });
   }
 
-
   return (
     <div className="w-[1300px]">
       <AddCategory setOpen={setOpen} open={open} onRefresh={Kategory} />
+      <EditCategory
+        setEditCategory={setEditCategory}
+        editcategory={editcategory}
+        onRefresh={Kategory}
+      />
 
       <Table
         bordered
@@ -64,11 +70,6 @@ function Kategory() {
             dataIndex: "description",
           },
 
-          // {
-          //   title: "CreatedAt",
-          //   dataIndex: "createdAt",
-          // },
-
           {
             title: "Delet & Edit",
             dataIndex: "",
@@ -78,15 +79,22 @@ function Kategory() {
                   <Button
                     type="primary"
                     style={{ background: "red" }}
-                    onClick={() => Delet(record.id)} // To‘g‘ri chaqirilishi kerak
+                    onClick={() => Delet(record.id)}
                   >
                     Delet
                   </Button>
-                  <Button type="primary">Edit</Button>
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      setEditCategory(record);
+                    }}
+                  >
+                    Edit
+                  </Button>
                 </div>
               );
             },
-          }
+          },
         ]}
         dataSource={mahsulot}
       />

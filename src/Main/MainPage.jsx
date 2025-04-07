@@ -5,6 +5,7 @@ import MahsulotlarPage from "./MahsulotlarPage";
 import KategoriaPage from "./KategoriaPage";
 import Mijozlar from "./Mijozlar";
 import Bannerlar from "./Bannerlar";
+import Buyurtmalar from "./Buyurtmalar";
 
 function MainPage() {
   return (
@@ -15,6 +16,8 @@ function MainPage() {
         <Route path="/kategoria" element={<KategoriaPage />} />
         <Route path="/mijozlar" element={<Mijozlar />} />
         <Route path="/bannerlar" element={<Bannerlar />} />
+        <Route path="/buyurtmalar" element={<Buyurtmalar/>} />
+
       </Routes>
     </div>
   );

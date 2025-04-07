@@ -1,17 +1,16 @@
-import { Button, Drawer, Form, Input, Radio, Switch, message } from "antd";
+import { Button, Drawer, Form, Input, InputNumber, Radio, message } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React from "react";
 import api from "./Axios";
 
-function EditBanner({ seteditBanner, editBanner }) {
+function EditCategory({ setEditCategory, editCategory }) {
   const [form] = useForm();
 
   const handleSubmit = (values) => {
     api
-      .patch(`/api/banners  /${editBanner.id}`, {
-        title: values.title,
-        imageUrl: values.imageUrl,
-        isActive: values.isActive,
+      .patch(`/api/categories/${editCategory.id}`, {
+        name: values.name,
+        description: values.description,
         createdAt: values.createdAt,
       })
       .then((res) => {
@@ -26,31 +25,23 @@ function EditBanner({ seteditBanner, editBanner }) {
   return (
     <div>
       <Drawer
-        open={editBanner ? true : false}
+        open={editCategory ? true : false}
         onClose={() => {
-          seteditBanner(undefined);
+          setEditCategory(undefined);
         }}
       >
         <Form
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
-          initialValues={editBanner}
+          initialValues={editCategory}
         >
-          <Form.Item label="Title" name="title">
+          <Form.Item label="Ism" name="name">
             <Input />
           </Form.Item>
 
-          <Form.Item label="isActive" name="isActive">
-          <Switch />
-          </Form.Item>
-
-          <Form.Item label="Parol" name="createdAt">
-            <Input.Password />
-          </Form.Item>
-
-          <Form.Item label="Rasm URL" name="imageUrl">
-            <Input placeholder="Rasm URL kiriting" />
+          <Form.Item label="Description" name="description">
+            <Input />
           </Form.Item>
 
           <Form.Item>
@@ -64,4 +55,4 @@ function EditBanner({ seteditBanner, editBanner }) {
   );
 }
 
-export default EditBanner;
+export default EditCategory;
