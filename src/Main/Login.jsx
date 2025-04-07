@@ -23,10 +23,8 @@ function LoginPage() {
                 useMyStor.setState({
                   accessToken: res.data.accessToken,
                   user: res.data.user,
-                  
                 });
                 api.defaults.headers.accessToken = `Bearer ${res.data.accessToken}`;
-
 
                 localStorage.setItem("auth", JSON.stringify(res.data));
               })

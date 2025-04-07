@@ -4,36 +4,17 @@ import { useState, useEffect } from "react";
 import AddBuyurtma from "./AddBuyurtma";
 import EditBuyurtma from "./EditBuyrtma";
 
-function B({ status }) {
-  const statusStyles = {
-    pending: "bg-yellow-100 text-yellow-800",
-    completed: "bg-green-100 text-green-800",
-    cancelled: "bg-red-100 text-red-800",
-  };
-
-  return (
-    <span
-      className={`px-3 py-1 rounded-full text-sm font-medium ${statusStyles[status]}`}
-    >
-      {status.charAt(0).toUpperCase() + status.slice(1)}
-    </span>
-  );
-}
-
-function OrdersPage() {
-  const [orderState, setOrderState] = useState([]);
+function Buyurtma() {
+  const [buyurtmaState, setBuyurtmaState] = useState([]);
   const [userState, setUserState] = useState([]);
   const [productState, setProductState] = useState([]);
-  const [openOrderDrawer, setOpenDrawer] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const orders = () => {
-    setLoading(true);
     api
       .get("/api/orders?order=ASC")
       .then((res) => {
-        console.log("order", res.data.items);
-        setOrderState(res.data.items);
+        setBuyurtmaState(res.data.items);
       })
       .catch((error) => {
         console.error("Error fetching orders:", error);
@@ -50,33 +31,32 @@ function OrdersPage() {
   useEffect(() => {
     api.get("/api/users").then((res) => {
       setUserState(res.data.items);
-      console.log(res.data);
     });
   }, []);
 
   useEffect(() => {
     api.get("/api/products").then((res) => {
       setProductState(res.data.items);
-      console.log("products", res.data.items);
     });
   }, []);
 
-  function onDelete(id) {
+  function Delet(id) {
     api
       .delete(`/api/orders/${id}`)
       .then(() =>
-        setOrderState((prev) => prev.filter((item) => item.id !== id))
+        setBuyurtmaState((item) => item.filter((item) => item.id !== id))
       );
   }
 
   return (
     <div className=" bg-gray-50 w-[1300px]">
-      <AddBuyurtma 
-        open={openOrderDrawer}
-        setOpen={setOpenDrawer}
-        orderFuntion={orders} />
+      <AddBuyurtma
+        open={open}
+        setOpen={setOpen}
+        orderFuntion={orders}
+      />
 
-        <EditBuyurtma  />
+      <EditBuyurtma  buyurtmaState={buyurtmaState} setBuyurtmaState={setBuyurtmaState} />
       <Table
         style={{
           overflow: "auto",
@@ -97,7 +77,7 @@ function OrdersPage() {
             title: "Mijoz",
             render: (customerId) => {
               const new_customer = userState.find(
-                (prev) => prev.id === customerId
+                (item) => item.id === customerId
               );
               return new_customer?.name;
             },
@@ -133,25 +113,24 @@ function OrdersPage() {
               );
             },
           },
+
           {
-            key: "actions",
-            dataIndex: "id",
-            title: "Actions",
-            render: (id) => {
+            title: "Delet & Edit",
+            dataIndex: "",
+            render: (_, record) => {
               return (
-                <div className="flex gap-2">
+                <div className=" flex gap-2">
                   <Button
                     type="primary"
                     style={{ background: "red" }}
-                    onClick={() => onDelete(id)}
+                    onClick={() => Delet(record.id)}
                   >
                     Delet
                   </Button>
-
                   <Button
                     type="primary"
                     onClick={() => {
-                      seteditBanner(record);
+                      setBuyurtmaState(record);
                     }}
                   >
                     Edit
@@ -160,14 +139,14 @@ function OrdersPage() {
               );
             },
           },
+       
         ]}
-        dataSource={orderState}
+        dataSource={buyurtmaState}
         rowKey="id"
         pagination={{ pageSize: 10 }}
       />
-     
     </div>
   );
 }
 
-export default OrdersPage;
+export default Buyurtma;

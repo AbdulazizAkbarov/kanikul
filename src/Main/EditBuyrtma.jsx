@@ -1,9 +1,11 @@
-import { Button, Drawer, Form, Input, Radio, Switch, message } from "antd";
+import { Button, Drawer, Form, Input, Select, message } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React from "react";
 import api from "./Axios";
+import { useState } from "react";
+import { useEffect } from "react";
 
-function EditBuyurtma({ setBuyurtma, editBuyurtma }) {
+function EditBuyurtma({ buyurtmaState ,setBuyurtmaState }) {
   const [form] = useForm();
   const [userState, setUserState] = useState([]);
   const [productState, setProductState] = useState([]);
@@ -11,29 +13,26 @@ function EditBuyurtma({ setBuyurtma, editBuyurtma }) {
   useEffect(() => {
     api.get("/api/users").then((res) => {
       setUserState(res.data.items);
-      console.log(res.data);
     });
   }, []);
 
   useEffect(() => {
     api.get("/api/products").then((res) => {
       setProductState(res.data.items);
-      console.log("products", res.data.items);
     });
   }, []);
 
-
   const handleSubmit = (values) => {
     api
-    .post("api/orders", {
-      customerId: values.customerId,
-      items: [
-        {
-          productId: values.productId,
-          quantity: values.quantity,
-        },
-      ],
-    })
+      .post("api/orders", {
+        customerId: values.customerId,
+        items: [
+          {
+            productId: values.productId,
+            quantity: values.quantity,
+          },
+        ],
+      })
       .then((res) => {
         message.success("Foydalanuvchi qo‘shildi!");
         form.resetFields();
@@ -46,12 +45,17 @@ function EditBuyurtma({ setBuyurtma, editBuyurtma }) {
   return (
     <div>
       <Drawer
-        open={editBuyurtma ? true : false}
+        open={buyurtmaState ? true : false}
         onClose={() => {
-          setBuyurtma(undefined);
+          setBuyurtmaState(undefined);
         }}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          initialValues={buyurtmaState}
+        >
           <Form.Item label="CustomerId" name="customerId">
             <Select
               options={userState.map((i) => {

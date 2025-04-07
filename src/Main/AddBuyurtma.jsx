@@ -13,14 +13,12 @@ function AddBuyurtma({ setOpen, open, onRefresh }) {
   useEffect(() => {
     api.get("/api/users").then((res) => {
       setUserState(res.data.items);
-      console.log(res.data);
     });
   }, []);
 
   useEffect(() => {
     api.get("/api/products").then((res) => {
       setProductState(res.data.items);
-      console.log("products", res.data.items);
     });
   }, []);
 
